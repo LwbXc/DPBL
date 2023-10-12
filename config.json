@@ -1,0 +1,6 @@
+{
+    "max_event_num": 50000,
+    "time_embed_num": 6000,
+    "max_len": 1200,
+    "min_len": 30
+}
