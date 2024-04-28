@@ -12,6 +12,7 @@ import os
 
 
 class Trainer:
+    '''A trainer to train the Uberl model'''
 
     def __init__(self, uberl: Uberl, train_dataloader: DataLoader,
                  lr: float = 1e-4, betas=(0.9, 0.999), weight_decay: float = 0.01, warmup_steps=10000,
@@ -60,11 +61,11 @@ class Trainer:
 
     def iteration(self, epoch, data_loader):
         """
-        loop over the data_loader for training
-        and auto save the model every peoch
+        loop over the data_loader for training and auto save the model every peoch
 
-        :param epoch: current epoch index
-        :param data_loader: torch.utils.data.DataLoader for iteration
+        Args:
+            epoch (int): current epoch index
+            data_loader (torch.utils.data.DataLoader): the dataloader for iteration
         """
  
         str_code = "train"
@@ -119,8 +120,8 @@ class Trainer:
     def save(self, epoch):
         """
         Saving the current Uberl model on file_path
-
-        :param epoch: current epoch number
+        Args:
+            epoch (int): current epoch number
         """
         if torch.cuda.device_count() > 1:
             output_name = self.model_name + "_ep" + str(epoch)

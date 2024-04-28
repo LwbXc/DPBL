@@ -47,7 +47,7 @@ class PrintAttention:
 
     def iteration(self):
         """
-        loop over the data_loader for testing
+        loop over the data_loader and print attention weights
         """
         self.model.eval()
         # pdb.set_trace()

@@ -10,10 +10,11 @@ class UberlLayer(nn.Module):
 
     def __init__(self, hidden, attn_heads, feed_forward_hidden, attn_routers, dropout):
         """
-        :param hidden: hidden size of transformer
-        :param attn_heads: head sizes of multi-head attention
-        :param feed_forward_hidden: feed_forward_hidden, usually 4*hidden_size
-        :param dropout: dropout rate
+        Args:
+            hidden (int): hidden size of transformer
+            attn_heads (int): head sizes of multi-head attention
+            feed_forward_hidden (int): the hidden size for feed_forward layer, usually 4*hidden_size
+            dropout (float): dropout rate
         """
 
         super().__init__()

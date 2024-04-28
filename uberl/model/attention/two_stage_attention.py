@@ -17,6 +17,7 @@ class ExtractorAndDenoising(nn.Module):
         self.preference_num = preference_num
 
     def forward(self, x, mask):
+        '''The proposed two stage attention'''
         mask = mask.float()
         mask1 = mask.unsqueeze(1).repeat(1, self.preference_num, 1).unsqueeze(1)
         mask2 = mask1.permute(0, 1, 3, 2)

@@ -13,9 +13,11 @@ class DatasetTrain(Dataset):
 
     def __init__(self, config, file_path):
         """
-        Input:
-        config (dict): hyperparameters
-        file_path (str): path of the dataset to be loaded
+        The dataloader to load triplet for pre-training
+
+        Args:
+            config (dict): hyperparameters
+            file_path (str): path of the dataset to be loaded
         """
         self.config = config
         dataset = csv.reader(open(file_path, 'r'))
@@ -30,6 +32,13 @@ class DatasetTrain(Dataset):
         return len(self.lines)
 
     def sample(self, line, p):
+        """
+        Downsample the behavior sequence
+
+        Args:
+            line (list): a behavior sequence
+            p (float): the downsampling rate
+        """
         event_and_time = line[2:]
         if len(event_and_time)>2*self.max_length:
             event_and_time = event_and_time[:2*self.max_length]

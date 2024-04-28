@@ -10,16 +10,16 @@ import numpy as np
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--train_embeddings", type=str, help="path of train dataset")
-    parser.add_argument("--train_labels", type=str, help="path of train dataset")
-    parser.add_argument("--test_embeddings", type=str, help="path of test dataset")
-    parser.add_argument("--test_labels", type=str, help="path of test dataset")
+    parser.add_argument("--train_embeddings", type=str, help="path of the embeddings of train dataset")
+    parser.add_argument("--train_labels", type=str, help="path of the labels of train dataset")
+    parser.add_argument("--test_embeddings", type=str, help="path of the embeddings of test dataset")
+    parser.add_argument("--test_labels", type=str, help="path of the labels of test dataset")
     
     parser.add_argument("--embedding_save", type=str, help="path to save embeddings")
-    parser.add_argument("--result_save", type=str, help="directory path to save results")
+    parser.add_argument("--result_save", type=str, help="path of logs")
 
     parser.add_argument("-hs", "--hidden", type=int, default=128, help="hidden size")
-    parser.add_argument("--layers", type=int, default=2, help="number of layers of graph-based encoding module")
+    parser.add_argument("--layers", type=int, default=2, help="number of layers in the predictor")
 
     parser.add_argument("-b", "--batch_size", type=int, default=128, help="number of batch_size")
     parser.add_argument("-e", "--epochs", type=int, default=100, help="number of epochs")
@@ -55,7 +55,8 @@ def main():
     predictor = Predictor(hidden=args.hidden, n_layers=args.layers, n_class=2)
 
     print("Creating Trainer")
-    trainer = PredictorTrainer(predictor, dataloader=train_data_loader,
+    trainer = PredictorTrainer(predictor, train_dataloader=train_data_loader, 
+                        test_dataloader=test_data_loader,
                         lr=args.lr, betas=(args.adam_beta1, args.adam_beta2), weight_decay=args.adam_weight_decay,
                         with_cuda=args.with_cuda, cuda_devices=args.cuda_devices, log_freq=args.log_freq, batch_size = args.batch_size,
                         log_path = args.result_save)
@@ -66,9 +67,11 @@ def main():
         
         with torch.no_grad():
             trainer.test(epoch)
+
     print("Best valid", trainer.best_valid, "Best test", trainer.best_test)
     with open(args.result_save, 'a') as f:
-        f.write("Model {}, best valid {}, best test {}\n".format(args.model_name, str(trainer.best_valid), str(trainer.best_test)))
+        f.write("Model {}, best valid {}, best test {}\n".format(
+                        args.model_name, str(trainer.best_valid), str(trainer.best_test)))
 
 
 if __name__ == '__main__':

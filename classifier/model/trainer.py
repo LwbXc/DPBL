@@ -12,8 +12,10 @@ import os
 
 
 class PredictorTrainer:
+    '''A trainer to train the predictor for downstream task'''
 
-    def __init__(self, model: Predictor, dataloader: DataLoader,
+    def __init__(self, model: Predictor, train_dataloader: DataLoader, 
+                 test_dataloader: DataLoader,
                  lr: float = 1e-4, betas=(0.9, 0.999), weight_decay: float = 0.01, warmup_steps=10000,
                  with_cuda: bool = True, cuda_devices=None, log_freq: int = 10, batch_size: int = 30, 
                  log_path: str = None):
@@ -31,7 +33,8 @@ class PredictorTrainer:
             self.model = nn.DataParallel(self.model, device_ids=cuda_devices)
 
         # Setting the train and test data loader
-        self.data_loader = dataloader
+        self.train_dataloader = train_dataloader
+        self.test_dataloader = test_dataloader
 
         # Setting the Adam optimizer with hyper-param
         self.optim = Adam(self.model.parameters(), lr=lr, betas=betas, weight_decay=weight_decay)
@@ -46,12 +49,12 @@ class PredictorTrainer:
         print("Total Parameters:", sum([p.nelement() for p in self.model.parameters()]))
 
     def train(self, epoch):
-        self.iteration(epoch)
+        self.iteration(epoch, self.train_dataloader)
 
     def test(self, epoch):
-        self.iteration(epoch, train=False)
+        self.iteration(epoch, self.test_dataloader, train=False)
 
-    def iteration(self, epoch, train=True):
+    def iteration(self, epoch, dataloader, train=True):
         """
         loop over the data_loader for training or testing
         if on train status, backward operation is activated
@@ -67,14 +70,14 @@ class PredictorTrainer:
             self.model.train()
         else:
             str_code = "test"
-            valid_threshold = int(0.1*len(self.data_loader)) + 1
+            valid_threshold = int(0.1*len(dataloader)) + 1
             self.model.eval()
 
         print("epoch:", epoch)
         # Setting the tqdm progress bar
-        data_iter = tqdm.tqdm(enumerate(self.data_loader),
+        data_iter = tqdm.tqdm(enumerate(dataloader),
                               desc="EP_%s:%d" % (str_code, epoch),
-                              total=len(self.data_loader),
+                              total=len(dataloader),
                               bar_format="{l_bar}{r_bar}")
         
         avg_loss = 0

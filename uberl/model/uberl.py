@@ -35,7 +35,7 @@ class Uberl(nn.Module):
         # embedding the indexed sequence to sequence of vectors
         x = self.embedding(data)
 
-        # print the attention scores in the 1st layer
+        # print the attention scores in the 1st layer for train_mode==2
         attn_1 = None
         attn_2 = None
         

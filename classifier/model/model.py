@@ -4,6 +4,7 @@ import torch.nn as nn
 from .gelu import GELU
 
 class Predictor(nn.Module):
+    '''A simple predictor for downstream tasks'''
 
     def __init__(self, hidden=128, n_layers=2, n_class=2):
 

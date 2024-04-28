@@ -1,9 +1,9 @@
 # Uberl: Denoised Universal User Behavior Representation Learning
 
-Our Python version is 3.5.2 and torch version is 1.2.0.
+*Our Python version is 3.5.2 and torch version is 1.2.0.*
 
 ## Introduction
-This repository is the reporisity of **Uberl: Denoised Universal User Behavior Representation Learning** (currently under submission). Uberl is an unsupervised representation learning model to learning informative and high-quality representations for noisy user behavior sequences.
+This repository is the repository of **Uberl: Denoised Universal User Behavior Representation Learning** (currently under submission). Uberl is an unsupervised representation learning model to learning informative and high-quality representations for noisy user behavior sequences.
 
 ## Datasets
 + By default, our dataloader will load the data from CSV files as the training dataset or test dataset, and the format of each line in these files is as follows:
@@ -25,28 +25,40 @@ This repository is the reporisity of **Uberl: Denoised Universal User Behavior R
     ```bash
     bash ./scripts/inference.sh
     ```
-4. After pre-training, you can run following script to train classifier for downstream tasks:
+4. After pre-training, you can generate representations for the datasets of downstream tasks. Put the representations and the corresponding labels under `./data` and run following script to train classifier for downstream tasks:
    ```bash
    bash ./scripts/downstream_tasks.sh
    ```
 
 ## Detailed Usage
-
-### Train the model
-+ For example, if we want to train Uberl on /data/dataset/train.csv, and save the model per epoch as /data/save/uberl_ep0, /data/save/uberl_ep1, ...
-~~~bash
-python main.py --train_dataset /data/dataset/train.csv --model_save /data/save --model_name uberl --preference_num 16 --epochs 100 --batch_size 64
-~~~
-
-### Inference for the model
-+ For example, if we want to load /data/save/uberl_ep0 and generate embeddings for /data/dataset/test.csv:
-~~~
-python main.py --train_mode 2 --test_dataset /data/dataset/test.csv --model_save /data/save --load_file uberl_ep0 --preference_num 16 --epochs 100 --batch_size 64
-~~~
-
-### Train for downstream tasks
-
-+ Take anomaly detection as an example, we just train a classifier to predict the label. For example, if the embeddings of training dataset and test dataset are /data/dataset/train_embeddings.json and /data/dataset/test_embeddings.json, and labels of training dataset and test dataset are /data/dataset/train_labels.json and /data/dataset/test_labels.json:
-~~~
-python classifier/classifier.py --train_embeddings /data/dataset/train_embeddings.json --test_embeddings /data/dataset/test_embeddings.json --train_labels /data/dataset/train_labels.json --test_labels /data/dataset/test_labels.json --epochs 100 --result_save /data/logs/anomaly_detection.txt
-~~~
+The directory of this repository is organized as follows:
+```
+Project
+  |—— config.json
+  |—— main.py
+  |—— data
+  |—— save
+  |—— logs
+  |—— uberl
+      |—— dataset
+      |—— model
+      |—— trainer
+  |—— classifier
+      |—— model
+      |—— classifier.py
+  |—— scripts
+```
+Specifically, the details of each sub-directory or file are as followings:
++ `./config.json` defines the hyperparameters about the number of embedding table entries, the minimum length and the maximum length of user behavior sequences
++ `./main.py`: the main function to pre-train Uberl and to infer on test datasets
++ `./data` is the directory to put datasets
++ `./save` is the directory to save model parameters
++ `./logs` is the directory for log files
++ `./uberl` is the implementation of the proposed Uberl
+  + `./dataset` contains our dataloaders
+  + `./model` implements the two-stage attention-based architecture of Uberl
+  + `./trainer`: how we optimize Uberl with two contrastive learning strategies  
++ `./classifier` is the classifier for downstream tasks
+  + `./model` implements a simple classifier, the corresponding dataloader and optimizer
+  + `./classifier.py` is the main function to train the classifier and to infer on test datasets
++ `./scripts` contains our scripts for pre-training, inference and training on downstream tasks

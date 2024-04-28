@@ -7,12 +7,10 @@ from .uberl import Uberl
 from .utils import GELU
 
 class ContrastiveLearning(nn.Module):
+    '''Generate embeddings for the triplet and calculate 
+    the contrastive loss according to two contrastive learning strategies'''
     
     def __init__(self, uberl: Uberl):
-        """
-        :param bert: BERT model which should be trained
-        """
-
         super().__init__()
         self.uberl = uberl
         self.contrastive_loss = ContrastiveLoss(self.uberl.hidden)

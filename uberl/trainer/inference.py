@@ -54,6 +54,7 @@ class Inference:
                               bar_format="{l_bar}{r_bar}")
 
         hidden_embeddings = []
+        noise_list = []
         stime = time.time()
 
         for i, data in data_iter:
@@ -62,6 +63,7 @@ class Inference:
 
             hidden_embedding, noise = self.model.forward(data)            
             hidden_embeddings += hidden_embedding.cpu().detach().numpy().tolist()
+            noise_list += noise.cpu().detach().numpy().tolist()
 
         with open (self.embedding_path,'w') as f:
-            json.dump(hidden_embeddings, f)
+            json.dump([hidden_embeddings, noise_list], f)

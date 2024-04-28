@@ -10,12 +10,13 @@ import math
 import copy
 
 class ClassifierDataset(Dataset):
+    '''The dataloader to load embeddings of downstream datasets and the corresponding labels'''
 
     def __init__(self, embedding_path, label_path):
         """
-        Input:
-        embedding_path (str): file path of the embeddings to be loaded
-        label_path (str): file path of the labels to be loaded
+        Args:
+            embedding_path (str): file path of the embeddings to be loaded
+            label_path (str): file path of the labels to be loaded
         """
         self.embeddings = json.load(open(embedding_path, 'r'))
         self.labels = json.load(open(label_path, 'r'))

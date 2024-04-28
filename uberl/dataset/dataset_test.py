@@ -13,9 +13,11 @@ class DatasetTest(Dataset):
 
     def __init__(self, config, file_path):
         """
-        Input:
-        config (dict): hyperparameters
-        file_path (str): path of the dataset to be loaded
+        The dataloader to load dataset for inference
+
+        Args:
+            config (dict): hyperparameters
+            file_path (str): path of the dataset to be loaded
         """
         self.config = config
         self.lines = csv.reader(open(file_path, 'r'))
@@ -26,7 +28,7 @@ class DatasetTest(Dataset):
     def __len__(self):
         return len(self.lines)
 
-    def sample(self, line):
+    def preprocess(self, line):
         event_and_time = line[2:]
         if len(event_and_time)>2*self.max_length:
             event_and_time = event_and_time[:2*self.max_length]
@@ -52,7 +54,7 @@ class DatasetTest(Dataset):
 
         line_anchor = self.lines[item]
         
-        time_anchor, event_anchor, mask_anchor = self.sample(line_anchor)
+        time_anchor, event_anchor, mask_anchor = self.preprocess(line_anchor)
 
         output_anchor = {
             "time": time_anchor,
