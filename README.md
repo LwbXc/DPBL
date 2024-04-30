@@ -1,9 +1,9 @@
 # Uberl: Denoised Universal User Behavior Representation Learning
 
-*Our Python version is 3.5.2 and torch version is 1.2.0.*
+*Our Python version is 3.5.2 and the torch version is 1.2.0.*
 
 ## Introduction
-This repository is the repository of **Uberl: Denoised Universal User Behavior Representation Learning** (currently under submission). Uberl is an unsupervised representation learning model to learning informative and high-quality representations for noisy user behavior sequences.
+This repository is the repository of **Uberl: Denoised Universal User Behavior Representation Learning** (currently under submission). Uberl is an unsupervised representation learning model for learning informative and high-quality representations for noisy user behavior sequences.
 
 ## Datasets
 + By default, our dataloader will load the data from CSV files as the training dataset or test dataset, and the format of each line in these files is as follows:
@@ -13,19 +13,19 @@ This repository is the repository of **Uberl: Denoised Universal User Behavior R
   ~~~
   where each action is represented as an integer.
 
-+ If you want to load your data in other formats, you need to preprocess the data into the format we specify, or implement your own dataloader by editing `./uberl/dataset/dataset_test.py` and `./uberl/dataset/dataset_train.py`.
++ If you want to load your data in other formats, you need to preprocess the data into the format we specify or implement your own dataloader by editing `./uberl/dataset/dataset_test.py` and `./uberl/dataset/dataset_train.py`.
 
 ## Quick Demos
 1. Put your dataset under `./data`
-2. We provide following script to train the model:
+2. We provide the following script to train the model:
     ```bash
     bash ./scripts/train.sh
     ``` 
-3. For inference, we provide following script to generate representations:
+3. For inference, we provide the following script to generate representations:
     ```bash
     bash ./scripts/inference.sh
     ```
-4. After pre-training, you can generate representations for the datasets of downstream tasks. Put the representations and the corresponding labels under `./data` and run following script to train classifier for downstream tasks:
+4. After pre-training, you can generate representations for the datasets of downstream tasks. Put the representations and the corresponding labels under `./data` and run the following script to train a classifier for downstream tasks:
    ```bash
    bash ./scripts/downstream_tasks.sh
    ```
@@ -48,7 +48,7 @@ Project
       |—— classifier.py
   |—— scripts
 ```
-Specifically, the details of each sub-directory or file are as followings:
+Specifically, the details of each sub-directory or file are as follows:
 + `./config.json` defines the hyperparameters about the number of embedding table entries, the minimum length and the maximum length of user behavior sequences
 + `./main.py`: the main function to pre-train Uberl and to infer on test datasets
 + `./data` is the directory to put datasets
