@@ -62,3 +62,8 @@ Specifically, the details of each sub-directory or file are as follows:
   + `./model` implements a simple classifier, the corresponding dataloader and optimizer
   + `./classifier.py` is the main function to train the classifier and to infer on test datasets
 + `./scripts` contains our scripts for pre-training, inference and training on downstream tasks
+
+## Main results
+The main results on NetEase dataset and Tsinghua dataset are as follows:
+
+![local path](./img/main_results.png)
