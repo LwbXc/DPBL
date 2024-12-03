@@ -1,9 +1,9 @@
-# Uberl: Denoised Universal User Behavior Representation Learning
+# DPBL: Denoised Player Behavior Representation Learning
 
 *Our Python version is 3.5.2 and the torch version is 1.2.0.*
 
 ## Introduction
-This repository is the repository of **Uberl: Denoised Universal User Behavior Representation Learning** (currently under submission). Uberl is an unsupervised representation learning model for learning informative and high-quality representations for noisy user behavior sequences.
+This repository is the repository of **DPBL: Denoised Player Behavior Representation Learning** (currently under submission). DPBL is an unsupervised representation learning model for learning informative and high-quality representations for player behavior sequences with low signal-to-noise ratio.
 
 ## Datasets
 + By default, our dataloader will load the data from CSV files as the training dataset or test dataset, and the format of each line in these files is as follows:
