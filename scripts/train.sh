@@ -1,6 +1,6 @@
 pretrain_dataset='./data/pretrain.csv'
 save_path='./save'
-model_name='uberl'
+model_name='dpbl'
 preference_num=16
 epochs=100
 batch_size=64

@@ -13,7 +13,7 @@ This repository is the repository of **DPBL: Denoised Player Behavior Representa
   ~~~
   where each action is represented as an integer.
 
-+ If you want to load your data in other formats, you need to preprocess the data into the format we specify or implement your own dataloader by editing `./uberl/dataset/dataset_test.py` and `./uberl/dataset/dataset_train.py`.
++ If you want to load your data in other formats, you need to preprocess the data into the format we specify or implement your own dataloader by editing `./dpbl/dataset/dataset_test.py` and `./dpbl/dataset/dataset_train.py`.
 
 ## Quick Demos
 1. Put your dataset under `./data`
@@ -39,7 +39,7 @@ Project
   |—— data
   |—— save
   |—— logs
-  |—— uberl
+  |—— dpbl
       |—— dataset
       |—— model
       |—— trainer
@@ -50,14 +50,14 @@ Project
 ```
 Specifically, the details of each sub-directory or file are as follows:
 + `./config.json` defines the hyperparameters about the number of embedding table entries, the minimum length and the maximum length of user behavior sequences
-+ `./main.py`: the main function to pre-train Uberl and to infer on test datasets
++ `./main.py`: the main function to pre-train DPBL and to infer on test datasets
 + `./data` is the directory to put datasets
 + `./save` is the directory to save model parameters
 + `./logs` is the directory for log files
-+ `./uberl` is the implementation of the proposed Uberl
++ `./dpbl` is the implementation of the proposed DPBL
   + `./dataset` contains our dataloaders
-  + `./model` implements the two-stage attention-based architecture of Uberl
-  + `./trainer`: how we optimize Uberl with two contrastive learning strategies  
+  + `./model` implements the two-stage attention-based architecture of DPBL
+  + `./trainer`: how we optimize DPBL with two contrastive learning strategies  
 + `./classifier` is the classifier for downstream tasks
   + `./model` implements a simple classifier, the corresponding dataloader and optimizer
   + `./classifier.py` is the main function to train the classifier and to infer on test datasets

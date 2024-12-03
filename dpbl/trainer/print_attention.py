@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 
-from ..model import Uberl
+from ..model import DPBL
 from .optim_schedule import ScheduledOptim
 
 import pdb
@@ -15,24 +15,24 @@ import tqdm
 
 class PrintAttention:
 
-    def __init__(self, uberl: Uberl, dataloader: DataLoader,
+    def __init__(self, dpbl: DPBL, dataloader: DataLoader,
                  lr: float = 1e-4, betas=(0.9, 0.999), weight_decay: float = 0.01, warmup_steps=10000,
                  with_cuda: bool = True, cuda_devices=None, log_freq: int = 10, train_mode: int = 0, 
                  load_file: str = None, output_path: str = None, config: dict = None,
                  embedding_path: str = None, remarks: str = ""):
 
-        # Setup cuda device for Uberl inference, argument --cuda should be true
+        # Setup cuda device for DPBL inference, argument --cuda should be true
         cuda_condition = torch.cuda.is_available() and with_cuda
         self.device = torch.device("cuda:0" if cuda_condition else "cpu")
 
-        self.model = uberl.to(self.device)
+        self.model = dpbl.to(self.device)
         if load_file!=None:
             print("Load model from", os.path.join(output_path, load_file))
             self.model.load_state_dict(torch.load(os.path.join(output_path, load_file), map_location=self.device))
 
         # Distributed GPU training if CUDA can detect more than 1 GPU
         if with_cuda and torch.cuda.device_count() > 1:
-            print("Using %d GPUS for Uberl" % torch.cuda.device_count())
+            print("Using %d GPUS for DPBL" % torch.cuda.device_count())
             self.model = nn.DataParallel(self.model, device_ids=cuda_devices)
 
         print("Total Parameters:", sum([p.nelement() for p in self.model.parameters()]))

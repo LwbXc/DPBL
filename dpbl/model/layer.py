@@ -6,7 +6,7 @@ from .attention import ExtractorAndDenoising
 from .utils import SublayerConnection, PositionwiseFeedForward
 
 
-class UberlLayer(nn.Module):
+class DPBLLayer(nn.Module):
 
     def __init__(self, hidden, attn_heads, feed_forward_hidden, attn_routers, dropout):
         """

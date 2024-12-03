@@ -5,7 +5,7 @@ from .position import PositionalEmbedding
 from .timestamp import TimeEmbedding
 from .event import EventEmbedding
 
-class UberlEmbedding(nn.Module):
+class DPBLEmbedding(nn.Module):
 
     def __init__(self, config, embed_size, head_num, dropout=0.1):
         super().__init__()

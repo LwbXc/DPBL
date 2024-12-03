@@ -2,12 +2,12 @@ import pdb
 import torch
 import torch.nn as nn
 
-from .layer import UberlLayer
-from .embedding import UberlEmbedding
+from .layer import DPBLLayer
+from .embedding import DPBLEmbedding
 from .utils import LayerNorm, GELU
 import torch.nn.functional as F
 
-class Uberl(nn.Module):
+class DPBL(nn.Module):
 
     def __init__(self, config, hidden=128, n_layers=2, attn_heads=12, preference_num=12, dropout=0.1):
 
@@ -16,11 +16,11 @@ class Uberl(nn.Module):
         self.n_layers = n_layers
         self.attn_heads = attn_heads
 
-        # embedding for Uberl, sum of positional, time interval, action embeddings
-        self.embedding = UberlEmbedding(config, embed_size=hidden, head_num=attn_heads)
+        # embedding for DPBL, sum of positional, time interval, action embeddings
+        self.embedding = DPBLEmbedding(config, embed_size=hidden, head_num=attn_heads)
 
         self.layers = nn.ModuleList(
-            [UberlLayer(hidden, attn_heads, hidden, preference_num, dropout) for _ in range(n_layers)])
+            [DPBLLayer(hidden, attn_heads, hidden, preference_num, dropout) for _ in range(n_layers)])
 
 
         self.output_linear1 = nn.Linear(hidden, int(hidden/4))

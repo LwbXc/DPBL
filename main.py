@@ -1,6 +1,6 @@
-from uberl.dataset import *
-from uberl.model import Uberl
-from uberl.trainer import Trainer, Inference, PrintAttention
+from dpbl.dataset import *
+from dpbl.model import DPBL
+from dpbl.trainer import Trainer, Inference, PrintAttention
 from torch.utils.data import DataLoader
 import torch
 import argparse
@@ -11,18 +11,18 @@ import os
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--train_mode", type=int, default=0, help="0)pretrain, 1)inference, 2)save the attention weight of Uberl")
+    parser.add_argument("--train_mode", type=int, default=0, help="0)pretrain, 1)inference, 2)save the attention weight of DPBL")
     parser.add_argument("--train_dataset", type=str, help="path of train dataset")
     parser.add_argument("--test_dataset", type=str, help="path of test_dataset", default="")
     parser.add_argument("--model_save", type=str, help="path to save model")
-    parser.add_argument("--model_name", type=str, help="the file name to save the model with", default='uberl')
+    parser.add_argument("--model_name", type=str, help="the file name to save the model with", default='dpbl')
     parser.add_argument("--embedding_save", type=str, help="path to save embeddings or attention weights in mode 1 and mode 2")
     parser.add_argument("--log_path", type=str, help="directory path to save logs")
     parser.add_argument("--load_file", type=str, default=None)
     parser.add_argument("--config_file", type=str, default="config.json")
 
     parser.add_argument("--hidden", type=int, default=128, help="hidden size")
-    parser.add_argument("--layers", type=int, default=2, help="number of layers of Uberl")
+    parser.add_argument("--layers", type=int, default=2, help="number of layers of DPBL")
     parser.add_argument("--attn_heads", type=int, default=8, help="number of attention heads")
     parser.add_argument("--preference_num", type=int, default=16, help="number of preference distributions")
 
@@ -48,11 +48,11 @@ def main():
         train_dataset = DatasetTrain(config, args.train_dataset)
         train_data_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
     
-        print("Building Uberl model")
-        uberl = Uberl(config, hidden=args.hidden, n_layers=args.layers, attn_heads=args.attn_heads, preference_num=args.preference_num)
+        print("Building DPBL model")
+        dpbl = DPBL(config, hidden=args.hidden, n_layers=args.layers, attn_heads=args.attn_heads, preference_num=args.preference_num)
 
-        print("Creating Uberl Trainer")
-        trainer = Trainer(uberl, train_dataloader=train_data_loader, 
+        print("Creating DPBL Trainer")
+        trainer = Trainer(dpbl, train_dataloader=train_data_loader, 
                             lr=args.lr, betas=(args.adam_beta1, args.adam_beta2), weight_decay=args.adam_weight_decay,
                             with_cuda=args.with_cuda, cuda_devices=args.cuda_devices, log_freq=args.log_freq, batch_size = args.batch_size,
                             train_mode = args.train_mode, load_file = args.load_file, output_path = args.model_save, model_name=args.model_name, config = config, 
@@ -72,11 +72,11 @@ def main():
             print("For inferece mode, test dataset should be provided")
             exit()
 
-        print("Building Uberl model")
-        uberl = Uberl(config, hidden=args.hidden, n_layers=args.layers, attn_heads=args.attn_heads, preference_num=args.preference_num)
+        print("Building DPBL model")
+        dpbl = DPBL(config, hidden=args.hidden, n_layers=args.layers, attn_heads=args.attn_heads, preference_num=args.preference_num)
 
-        print("Creating Uberl Inference")
-        trainer = Inference(uberl, dataloader=test_data_loader, lr=args.lr, betas=(args.adam_beta1, args.adam_beta2), 
+        print("Creating DPBL Inference")
+        trainer = Inference(dpbl, dataloader=test_data_loader, lr=args.lr, betas=(args.adam_beta1, args.adam_beta2), 
                             weight_decay=args.adam_weight_decay, with_cuda=args.with_cuda, cuda_devices=args.cuda_devices, log_freq=args.log_freq, 
                             train_mode = 1, load_file = args.load_file, output_path = args.model_save, config = config,
                             embedding_path = args.embedding_save)
@@ -90,11 +90,11 @@ def main():
             test_dataset = DatasetTest(config,  args.test_dataset)
             test_data_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
 
-        print("Building Uberl model")
-        uberl = Uberl(config, hidden=args.hidden, n_layers=args.layers, attn_heads=args.attn_heads, preference_num=args.preference_num)
+        print("Building DPBL model")
+        dpbl = DPBL(config, hidden=args.hidden, n_layers=args.layers, attn_heads=args.attn_heads, preference_num=args.preference_num)
 
-        print("Creating Uberl Trainer")
-        trainer = PrintAttention(uberl, dataloader=test_data_loader, lr=args.lr, betas=(args.adam_beta1, args.adam_beta2), 
+        print("Creating DPBL Trainer")
+        trainer = PrintAttention(dpbl, dataloader=test_data_loader, lr=args.lr, betas=(args.adam_beta1, args.adam_beta2), 
                             weight_decay=args.adam_weight_decay, with_cuda=args.with_cuda, cuda_devices=args.cuda_devices, log_freq=args.log_freq, 
                             train_mode = 1, load_file = args.load_file, output_path = args.model_save, config = config,
                             embedding_path = args.embedding_save)

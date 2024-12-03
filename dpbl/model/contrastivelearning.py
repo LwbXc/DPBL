@@ -3,23 +3,23 @@ import torch
 import pdb
 import torch.nn.functional as F
 
-from .uberl import Uberl
+from .dpbl import DPBL
 from .utils import GELU
 
 class ContrastiveLearning(nn.Module):
     '''Generate embeddings for the triplet and calculate 
     the contrastive loss according to two contrastive learning strategies'''
     
-    def __init__(self, uberl: Uberl):
+    def __init__(self, dpbl: DPBL):
         super().__init__()
-        self.uberl = uberl
-        self.contrastive_loss = ContrastiveLoss(self.uberl.hidden)
+        self.dpbl = dpbl
+        self.contrastive_loss = ContrastiveLoss(self.dpbl.hidden)
 
     def forward(self, data):
 
-        anchor, hidden_anchor = self.uberl(data[0])
-        positive, hidden_positive = self.uberl(data[1])
-        negative, hidden_negative = self.uberl(data[2])
+        anchor, hidden_anchor = self.dpbl(data[0])
+        positive, hidden_positive = self.dpbl(data[1])
+        negative, hidden_negative = self.dpbl(data[2])
 
         noise_anchor = hidden_anchor[:, :, 0:1, :]
         noise_positive = torch.cat([hidden_negative[:, :, 0:1, :], hidden_positive[:, :, 0:1, :]], dim=2)

@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 
-from ..model import Uberl, ContrastiveLearning
+from ..model import DPBL, ContrastiveLearning
 from .optim_schedule import ScheduledOptim
 
 import tqdm
@@ -12,31 +12,31 @@ import os
 
 
 class Trainer:
-    '''A trainer to train the Uberl model'''
+    '''A trainer to train the DPBL model'''
 
-    def __init__(self, uberl: Uberl, train_dataloader: DataLoader,
+    def __init__(self, dpbl: DPBL, train_dataloader: DataLoader,
                  lr: float = 1e-4, betas=(0.9, 0.999), weight_decay: float = 0.01, warmup_steps=10000,
                  with_cuda: bool = True, cuda_devices=None, log_freq: int = 10, batch_size: int = 30, 
                  train_mode: int = 0, load_file: str = None, output_path: str = None, model_name: str=None,
                  config: dict = None, log_path: str = None):
 
-        # Setup cuda device for Uberl training, argument --cuda should be true
+        # Setup cuda device for DPBL training, argument --cuda should be true
         cuda_condition = torch.cuda.is_available() and with_cuda
         self.device = torch.device("cuda:0" if cuda_condition else "cpu")
         print("Device:", self.device)
         self.model_name = model_name
 
-        # This Uberl model will be saved every epoch
-        self.uberl = uberl.to(self.device)
+        # This DPBL model will be saved every epoch
+        self.dpbl = dpbl.to(self.device)
 
-        self.model = ContrastiveLearning(self.uberl).to(self.device)
+        self.model = ContrastiveLearning(self.dpbl).to(self.device)
         
         if load_file!=None:
-            self.model.uberl.load_state_dict(torch.load(os.path.join(output_path, load_file), map_location=self.device))
+            self.model.dpbl.load_state_dict(torch.load(os.path.join(output_path, load_file), map_location=self.device))
 
         # Distributed GPU training if CUDA can detect more than 1 GPU
         if with_cuda and torch.cuda.device_count() > 1:
-            print("Using %d GPUS for Uberl" % torch.cuda.device_count())
+            print("Using %d GPUS for DPBL" % torch.cuda.device_count())
             self.model = nn.DataParallel(self.model, device_ids=cuda_devices)
 
         # Setting the train data loader
@@ -44,7 +44,7 @@ class Trainer:
 
         # Setting the Adam optimizer with hyper-param
         self.optim = Adam(self.model.parameters(), lr=lr, betas=betas, weight_decay=weight_decay)
-        self.optim_schedule = ScheduledOptim(self.optim, self.uberl.hidden, n_warmup_steps=warmup_steps)
+        self.optim_schedule = ScheduledOptim(self.optim, self.dpbl.hidden, n_warmup_steps=warmup_steps)
 
         self.log_freq = log_freq
         self.train_mode = train_mode
@@ -119,18 +119,18 @@ class Trainer:
 
     def save(self, epoch):
         """
-        Saving the current Uberl model on file_path
+        Saving the current DPBL model on file_path
         Args:
             epoch (int): current epoch number
         """
         if torch.cuda.device_count() > 1:
             output_name = self.model_name + "_ep" + str(epoch)
             output_path = os.path.join(self.output_path, output_name)
-            torch.save(self.model.module.uberl.state_dict(), output_path)
+            torch.save(self.model.module.dpbl.state_dict(), output_path)
             print("EP:%d Model Saved on:" % epoch, output_path)
 
         else:
             output_name = self.model_name + "_ep" + str(epoch)
             output_path = os.path.join(self.output_path, output_name)
-            torch.save(self.model.uberl.state_dict(), output_path)
+            torch.save(self.model.dpbl.state_dict(), output_path)
             print("EP:%d Model Saved on:" % epoch, output_path)
